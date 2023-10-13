@@ -50,5 +50,4 @@ public class MainActivity extends AppCompatActivity {
 
         return timeForm.format(date);
     }
-
 }
