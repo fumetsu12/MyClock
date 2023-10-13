@@ -27,9 +27,18 @@ public class MainActivity extends AppCompatActivity {
         String time = timeForm.format(date);
         timeOut.setText(time);
 
-        Button  refresh= findViewById(R.id.refresh);
-
-
+        Button refresh= findViewById(R.id.refresh);
+        refresh.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                TimeZone chinaTimeZone = TimeZone.getTimeZone("Asia/Shanghai");
+                Date date = new Date();
+                SimpleDateFormat timeForm = new SimpleDateFormat("HH:mm:ss");
+                timeForm.setTimeZone(chinaTimeZone);
+                String time = timeForm.format(date);
+                timeOut.setText(time);
+            }
+        });
 
 
 
