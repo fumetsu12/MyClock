@@ -6,25 +6,31 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="75dp"
+        android:background="@color/my_color"
+        android:rotationX="0"
+        app:title="电子时钟"
+        app:titleTextColor="@color/white" />
+
     <TextView
         android:id="@+id/time"
         android:layout_width="wrap_content"
         android:layout_height="60dp"
         android:layout_centerInParent="true"
-        android:textSize="40sp"
+        android:textSize="40sp" />
 
-        />
-    
     <Button
         android:id="@+id/refresh"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
         android:layout_alignParentBottom="true"
-        android:layout_marginBottom="10dp"
         android:layout_marginRight="10dp"
-        android:text="更新时间"
-        />
+        android:layout_marginBottom="15dp"
+        android:text="更新时间" />
 
     <Button
         android:id="@+id/record"
@@ -32,10 +38,8 @@
         android:layout_height="wrap_content"
         android:layout_above="@+id/refresh"
         android:layout_alignParentRight="true"
-        android:layout_marginTop="10dp"
         android:layout_marginRight="10dp"
-        android:text="记录时间"
-        />
+        android:text="记录时间" />
 
     <Button
         android:id="@+id/delete"
@@ -43,19 +47,17 @@
         android:layout_height="wrap_content"
         android:layout_above="@+id/record"
         android:layout_alignParentRight="true"
-        android:layout_marginTop="10dp"
         android:layout_marginRight="10dp"
-        android:text="删除时间"
-        />
+        android:text="删除时间" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/timeTable"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentTop="true"
+        android:layout_width="210dp"
+        android:layout_height="725dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="100dp"
         android:layout_marginBottom="10dp"
-        android:layout_marginRight="10dp"
-/>
+        tools:listitem="@layout/clock_item"/>
+
 
 </RelativeLayout>
