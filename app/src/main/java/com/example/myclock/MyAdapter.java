@@ -13,15 +13,25 @@ import java.util.List;
 
 public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyHolder> {
     private List<Record> timeRecord = new ArrayList<>();
+
+    static class MyHolder extends RecyclerView.ViewHolder{
+        TextView record;
+        public MyHolder(@NonNull View itemView) {
+            super(itemView);
+            //初始化控件
+            record = (TextView) itemView.findViewById(R.id.recordTime);
+
+        }
+    }
     public MyAdapter(List<Record> list){
         this.timeRecord = list;
     }
     @NonNull
     @Override
     public MyAdapter.MyHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.clock_item, parent, false);
-
-        return new MyHolder(view);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.clock_item,null);
+        MyAdapter.MyHolder holder = new MyHolder(view);
+        return holder;
     }
 
     @Override
@@ -37,13 +47,5 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyHolder> {
         return timeRecord.size();
     }
 
-    static class MyHolder extends RecyclerView.ViewHolder{
-        TextView record;
-        public MyHolder(@NonNull View itemView) {
-            super(itemView);
-            //初始化控件
-            record = itemView.findViewById(R.id.timeTable);
 
-        }
-    }
 }

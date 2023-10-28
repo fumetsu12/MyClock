@@ -1,8 +1,10 @@
 package com.example.myclock;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
@@ -20,11 +22,12 @@ public class MainActivity extends AppCompatActivity {
     private final Handler handler = new Handler();
     private List<Record> recordList = new ArrayList<>();
     int time_number = 0;
+    private TextView timeOut;
+    private SharedPreferences preferences;
     private final Runnable runable= new Runnable() {
         //每秒更新一次时钟
         @Override
         public void run() {
-            TextView timeOut = findViewById(R.id.time);
             timeOut.setText(getTimeForm());
             handler.postDelayed(this,1000);
         }
@@ -36,20 +39,24 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         //初始化控件
-        TextView timeOut = findViewById(R.id.time);
+        timeOut = findViewById(R.id.time);
         Button button_refresh = findViewById(R.id.refresh);
+        Button button_delete = findViewById(R.id.delete);
         Button button_record = findViewById(R.id.record);
         RecyclerView timeTable = findViewById(R.id.timeTable);
         //初始化适配器
         MyAdapter myAdapter = new MyAdapter(recordList);
-        //设置适配器
         timeTable.setAdapter(myAdapter);
+        //初始化布局管理器
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+        timeTable.setLayoutManager(layoutManager);
+        //获得SharedPreferences和editor对象
+        preferences = getSharedPreferences("timetable", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = preferences.edit();
         //输出时间
         timeOut.setText(getTimeForm());
-        //刷新
         handler.post(runable);
 
-        SharedPreferences timeRecord = getSharedPreferences("timeTable", MODE_PRIVATE);
         //更新时间按钮实先
         button_refresh.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -66,30 +73,41 @@ public class MainActivity extends AppCompatActivity {
                 time_number++;
                 recordList.add(new Record(time));
 
-                SharedPreferences.Editor editor = timeRecord.edit();
                 editor.putString("record" + time_number, time);
                 editor.putInt("number", time_number);
                 editor.commit();
             }
-
+        });
+        //删除时间按钮
+        button_delete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (time_number > 0) {
+                    editor.remove("record" + time_number);
+                    time_number--;
+                    editor.putInt("number", time_number);
+                    editor.commit();
+                    recordList.remove(recordList.size() - 1);
+                    // 通知adapter数据已经改变,改变输出
+                    myAdapter.notifyDataSetChanged();
+                }
+            }
         });
         reload();
     }
-
+    //设置时区并获得输出格式
     private String getTimeForm(){
         TimeZone chinaTimeZone = TimeZone.getTimeZone("Asia/Shanghai");
-        Date date = new Date();
         SimpleDateFormat timeForm = new SimpleDateFormat("HH:mm:ss");
         timeForm.setTimeZone(chinaTimeZone);
-
-        return timeForm.format(date);
+        return timeForm.format(new Date());
     }
+    //用户在关闭应用后再次打开时，重新加载之前保存的所有时间记录
     private void reload() {
-        SharedPreferences timeRecord = getSharedPreferences("timeTable", MODE_PRIVATE);
-        time_number = timeRecord.getInt("number", 0);
+        time_number = preferences.getInt("number", 0);
         int number = time_number;
         for (int i = 1; i <= number; i++) {
-            recordList.add(new Record(timeRecord.getString("record"+i,null)));
+            recordList.add(new Record(preferences.getString("record"+i,null)));
         }
     }
 }
